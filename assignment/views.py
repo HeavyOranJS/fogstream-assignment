@@ -1,19 +1,34 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import generic
 
+from .forms import SendingForm
 
-#TODO: sending view
-class SendingView(LoginRequiredMixin, generic.TemplateView):
+# class SendingView(LoginRequiredMixin, generic.TemplateView):
+class SendingView(LoginRequiredMixin, generic.edit.FormView):
     """
     Send a message to admin. Requires login
     """
 
-    login_url = '/assignment/login/'
+    # #use template form for user creation
+    form_class = SendingForm
+
+    #override default template name
     template_name = "assignment/sending.html"
+    #override default login page location, triggers if unauthorised user
+    #tried to access this page (LoginRequiredMixin)
+    login_url = '/assignment/login/'
+    #TODO: create success page
+    success_url = '/assignment/login/'
+    #TODO: is_valid send email to admin
+
+    #TODO: comment this
+    def form_valid(self, form):
+        form.send_email()
+        return super().form_valid(form)
 
 
 class SignupView(generic.edit.FormView):
@@ -39,7 +54,6 @@ class SignupView(generic.edit.FormView):
         login(self.request, user)
         #redirect to sending page, because there is nothing to do in this app
         return redirect(reverse('assignment:sending'))
-
 
 class LoginView(generic.edit.FormView):
     """
