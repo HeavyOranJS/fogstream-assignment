@@ -24,10 +24,12 @@ class SendingView(LoginRequiredMixin, generic.edit.FormView):
     #TODO: create success page
     success_url = '/assignment/login/'
     #TODO: is_valid send email to admin
-
-    #TODO: comment this
+    # self.request
+    #TODO: add comments to this
     def form_valid(self, form):
-        form.send_email()
+        # print(self.request.user.username)
+        form.send_email(self.request.user.username)
+        #TODO:remove print
         return super().form_valid(form)
 
 

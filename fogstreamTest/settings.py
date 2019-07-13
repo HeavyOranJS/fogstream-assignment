@@ -11,24 +11,37 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import json
+from django.core.exceptions import ImproperlyConfigured
+
+#NOTE: structure of config.json you can find in dummy.config.json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+#open config.json with secret info
+with open(os.path.join(BASE_DIR, 'fogstreamTest/config.json')) as config_file:
+    CONFIG = json.load(config_file)
 
-# Quick-start development settings - unsuitable for production
+def get_config(setting, config=CONFIG):
+    """
+    Get secret setting from config.json or fail with ImproperlyConfigured
+    """
+    try:
+        return config[setting]
+    except KeyError:
+        raise ImproperlyConfigured("Set the {} setting".format(setting))
+
+#TODO: CHECK DEPLOY BEFORE PRODUCTION
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'cw)*#fs$d7nlgclhjagwm5xodj+-_5096tv#q*0!vwg&44)+jl'
+SECRET_KEY = get_config('SECRET_KEY')
 
+#TODO: TURN OFF BEFORE PRODUCTION
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -70,25 +83,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'fogstreamTest.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
+#NAME and USER taken out to config.json because there is no reason
+#for you to create table and user with my DB_NAME and DB_USER
 DATABASES = {
-    'default': 
+    'default':
     {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'fog_db',
-        'USER': 'fog',
-        'PASSWORD': 'pass',
+        'NAME':  get_config('DB_NAME'),
+        'USER': get_config('DB_USER'),
+        'PASSWORD': get_config('DB_KEY'),
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -105,13 +112,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/2.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Vladivostok'
 
 USE_I18N = True
 
@@ -120,7 +123,22 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
-
 STATIC_URL = '/static/'
+
+#I think admin's email should not be public
+ADMINS = [('Admin', get_config("EMAIL_ADMIN"))]
+
+#Email settings
+EMAIL_USE_TLS = True
+#I used gmail, so HOST_USER should be *gmail.com
+EMAIL_HOST = 'smtp.gmail.com'
+
+EMAIL_PORT = 587
+
+EMAIL_HOST_USER = get_config('EMAIL_HOST_USER')
+
+EMAIL_HOST_PASSWORD = get_config('EMAIL_HOST_PASSWORD')
+
+DEFAULT_FROM_EMAIL = 'fogtest'
+
+DEFAULT_TO_EMAIL = 'some_examplar_email@fogtest.com'
