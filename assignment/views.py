@@ -11,8 +11,7 @@ class SendingView(LoginRequiredMixin, generic.TemplateView):
     """
     Send a message to admin. Requires login
     """
-    #TODO change login_url
-    # to redirect mixin to correct login page if user is not logged in
+
     login_url = '/assignment/login/'
     template_name = "assignment/sending.html"
 
@@ -21,7 +20,6 @@ class SignupView(generic.edit.FormView):
     """
     Sign up new users
     """
-    #TODO: link to login page
     
     #use template form for user creation
     form_class = UserCreationForm
@@ -47,7 +45,6 @@ class LoginView(generic.edit.FormView):
     """
     Log in existing users
     """
-    #TODO: link to signup page
     #TODO: if not logged in user was redirected here from
     # sending view, show message like "you must be logged in to send messages"
     
