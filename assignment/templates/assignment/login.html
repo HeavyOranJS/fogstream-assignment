@@ -1,0 +1,8 @@
+<h2>Log in</h2>
+<form method="post">
+  <!-- Сross Site Request Forgery token -->
+  {% csrf_token %}
+  <!-- render form's contents with <p> tags-->
+  {{ form.as_p }}
+  <button type="submit">Sign up</button>
+</form>

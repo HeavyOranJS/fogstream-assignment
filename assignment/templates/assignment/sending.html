@@ -1,1 +1,4 @@
-<h1>Hello, you can do it</h1>
+<h1>Sending landing</h1>
+{% if user.is_authenticated %}
+    User {{request.user.username}} is logged in
+{% endif %}
