@@ -1,0 +1,10 @@
+{
+    "YOU_DONT_NEED_THIS_PARAMETER":"but you need config.json with actual data",
+    "SECRET_KEY": "SECRET_KEY",
+    "DB_NAME": "DATABASES NAME",
+    "DB_USER": "DATABASES USER",
+    "DB_KEY": "DATABASES PASSWORD",
+    "EMAIL_HOST_USER": "EMAIL_HOST_USER@gmail.com",
+    "EMAIL_HOST_PASSWORD": "EMAIL_HOST_PASSWORD",
+    "EMAIL_ADMIN":"ADMINS Admin email"
+}
