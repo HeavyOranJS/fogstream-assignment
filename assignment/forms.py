@@ -12,10 +12,15 @@ class ContactForm(forms.Form):
 
     def send_email(self, username=None):
         """
-        Send email using the self.cleaned_data dictionary
+        Send email using the self.cleaned_data dictionary.
+        Accepts current authorized user's username and uses it to sign
+        email.
         """
 
         email = self.cleaned_data['email']
         message = self.cleaned_data['message']
 
-        mail_admins(subject="message from user {}".format(username), message=message)
+        mail_admins(
+            subject="Message from user {}".format(username), 
+            message="Message:'{0}' \nEntered email: {1}".format(message, email)
+        )

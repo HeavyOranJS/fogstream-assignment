@@ -1,3 +1,13 @@
 from django.test import TestCase
 
-# Create your tests here.
+class ContactViewTests(TestCase):
+    #TODO: ContactViewTests
+    pass
+
+class SignupViewTests(TestCase):
+    #TODO: SignupViewTests
+    pass
+
+class LoginViewTests(TestCase):
+    #TODO: LoginViewTests
+    pass

@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import generic
 
@@ -19,15 +19,11 @@ class ContactView(LoginRequiredMixin, generic.edit.FormView):
     #override default login page location, triggers if unauthorised user
     #tried to access this page (LoginRequiredMixin)
     login_url = '/assignment/login/'
-    #TODO: create success page
+    #TODO: send message to success_url
     success_url = '/assignment/login/'
-    #TODO: is_valid send email to admin
-    # self.request
-    #TODO: add comments to this
     def form_valid(self, form):
-        # print(self.request.user.username)
+        #send email from form
         form.send_email(self.request.user.username)
-        #TODO:remove print
         return super().form_valid(form)
 
 class SignupView(generic.edit.FormView):
@@ -60,11 +56,11 @@ class LoginView(generic.edit.FormView):
     """
     #TODO: if not logged in user was redirected here from
     # contact view, show message like "you must be logged in to send messages"
-    
+
     form_class = AuthenticationForm
     template_name = 'assignment/login.html'
     success_url = 'assignment/contact.html'
-    
+
     #if form is valid
     def form_valid(self, form):
         #no exception because form handles it
