@@ -13,7 +13,7 @@ class SendingView(LoginRequiredMixin, generic.TemplateView):
     """
     #TODO change login_url
     # to redirect mixin to correct login page if user is not logged in
-    login_url = '/login/'
+    login_url = '/assignment/login/'
     template_name = "assignment/sending.html"
 
 
