@@ -25,8 +25,7 @@ class MessageLog(models.Model):
     #bind manager
     objects = MessageLogManager()
 
-
-
+    #override standard __str__ function to display relevant info about object
     def __str__(self):
         return "sender: {}, time: {}, status:{}".format(
             self.sender,
