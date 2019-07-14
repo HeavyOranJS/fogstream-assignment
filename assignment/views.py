@@ -30,7 +30,7 @@ class SignupView(generic.edit.FormView):
     """
     Sign up new users
     """
-    
+
     #use template form for user creation
     form_class = UserCreationForm
     #override default template name
@@ -54,6 +54,7 @@ class LoginView(generic.edit.FormView):
     """
     Log in existing users
     """
+    
     #TODO: if not logged in user was redirected here from
     # contact view, show message like "you must be logged in to send messages"
 
