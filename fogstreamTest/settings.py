@@ -131,7 +131,6 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 # Nose will measure coverage on specified apps
 NOSE_ARGS = [
-    '--omit="*migrations*"',
     '--with-coverage',
     '--cover-package=assignment',
 ]
