@@ -201,3 +201,6 @@ dmypy.json
 
 #ignore secret data
 /fogstreamTest/config.json
+
+#ignore coverage
+.coverage
