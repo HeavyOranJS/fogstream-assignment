@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_nose',
     'assignment.apps.AssignmentConfig',
 ]
 
@@ -125,16 +124,6 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-
-# Use nose to run all tests (i want to know test coverage)
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
-# Nose will measure coverage on specified apps
-NOSE_ARGS = [
-    '--omit="*migrations*"',
-    '--with-coverage',
-    '--cover-package=assignment',
-]
 
 #I think admin's email should not be public
 ADMINS = [('Admin', get_config("EMAIL_ADMIN"))]

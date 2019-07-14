@@ -12,7 +12,7 @@ class ContactForm(forms.Form):
     """
     email = forms.EmailField()
     message = forms.CharField(widget=forms.Textarea)
-    
+
     def send_email(self, username=None):
         """
         Send email using the self.cleaned_data dictionary.
@@ -29,7 +29,7 @@ class ContactForm(forms.Form):
                 subject="Message from user {}".format(username),
                 message="Message:'{0}' \nEntered email: {1}".format(message, email)
             )
-        except SMTPException:
+        except:
             success = False
         finally:
             MessageLog.objects.create_messagelog(username, timezone.now(), success)

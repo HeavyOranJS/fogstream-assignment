@@ -19,12 +19,11 @@ class ContactView(LoginRequiredMixin, generic.edit.FormView):
     #override default login page location, triggers if unauthorised user
     #tried to access this page (LoginRequiredMixin)
     login_url = '/assignment/login/'
+    #TODO: send message to success_url
     success_url = '/assignment/login/'
     def form_valid(self, form):
         #send email from form
         form.send_email(self.request.user.username)
-        #TODO: redirect with message if send_email fails
-        #TODO: redirect with message if send_email succeeds
         return super().form_valid(form)
 
 class SignupView(generic.edit.FormView):
@@ -55,7 +54,7 @@ class LoginView(generic.edit.FormView):
     """
     Log in existing users
     """
-
+    
     #TODO: if not logged in user was redirected here from
     # contact view, show message like "you must be logged in to send messages"
 
@@ -65,7 +64,7 @@ class LoginView(generic.edit.FormView):
 
     #if form is valid
     def form_valid(self, form):
-        #no exception because form(frontend) handles it
+        #no exception because form handles it
         #login user data from form
         login(self.request, form.get_user())
         return redirect(reverse('assignment:contact'))
