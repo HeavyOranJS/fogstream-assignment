@@ -1,8 +1,10 @@
 from smtplib import SMTPException
-from django.utils import timezone
 
 from django import forms
-from django.core.mail import mail_admins
+from django.conf import settings
+from django.core.mail import mail_admins, send_mail
+from django.utils import timezone
+
 from .models import MessageLog
 
 

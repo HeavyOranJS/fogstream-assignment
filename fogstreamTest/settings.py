@@ -140,7 +140,7 @@ ADMINS = [('Admin', get_config("EMAIL_ADMIN"))]
 
 #Email settings
 EMAIL_USE_TLS = True
-
+#I used gmail, so HOST_USER should be *gmail.com
 EMAIL_HOST = 'smtp.gmail.com'
 
 EMAIL_PORT = 587
