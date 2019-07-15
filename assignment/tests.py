@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core import mail
 from django.shortcuts import reverse
 from django.test import Client, TestCase
 
@@ -41,6 +42,40 @@ class ContactViewTests(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
 
+class SignupViewTests(TestCase):
+    """
+    Tests for signup view.
+    """
+
+    def test_signup_view_is_valid_on_correct_request(self):
+        """
+        Signup view should create new user on correct request
+        """
+        client = Client()
+        user_data = {'username': 'test_user', 'password': "testpass1"}
+        url = reverse('assignment:signup')
+        response = client.post(url, user_data)
+        self.assertEqual(response.status_code, 200)
+
+class LoginViewTests(TestCase):
+    """
+    Tests for login view.
+    """
+
+    def test_signup_view_creates_user_with_on_correct_request(self):
+        """
+        Signup view should change user status to active if
+        correct request was recieved
+        """
+        client = Client()
+        user_data = {'username': 'test_user', 'password': 'testpass1'}
+        User.objects.create_user(**user_data)
+        url = reverse('assignment:login')
+        #send post request
+        client.post(url, user_data)
+        logged_user = User.objects.get(username='test_user')
+        self.assertTrue(logged_user.is_authenticated)
+
 class ContactFormTests(TestCase):
     """
     Tests for contact form. Mainly send_email()
@@ -59,26 +94,73 @@ class ContactFormTests(TestCase):
         }
         cls.correct_form = ContactForm(data=cls.correct_data)
 
+    def create_staffuser(self, username='test_staffuser', email="admin@example.com"):
+        """
+        Create staffuser for test purposes.
+        By default creates User with username='test_staffuser',
+        email="admin@example.com", is_staff = True, password = "pass"
+        """
+        staffuser = User.objects.create_user(username=username)
+        staffuser.is_staff = True
+        staffuser.set_password = ("pass")
+        staffuser.email = email
+        staffuser.save()
+        return staffuser
+
     def test_contact_form_is_valid_with_correct_data(self):
         """
         Check if form accepts correct data
         """
         self.assertTrue(self.correct_form.is_valid())
 
-    def test_send_email_throws_exception_if_no_superusers(self):
+    def test_send_email_throws_exception_if_no_staffusers(self):
         """
-        Check if no superusers error is handled
+        Check if no staffusers error is handled
         """
         self.correct_form.send_email("testusername")
         self.assertRaises(ValueError)
 
-    def test_send_email_throws_exception_if_superusers_have_no_emails(self):
+    def test_send_email_throws_exception_if_staffusers_have_no_emails(self):
         """
-        Check if no superuser emails erro is handled
+        Check if no staffuser emails erro is handled
         """
-        superuser = User.objects.create_user(username='test_superuser')
-        superuser.is_staff = True
-        self.client.force_login(superuser)
+        staffuser = User.objects.create_user(username='test_staffuser')
+        staffuser.is_staff = True
+        self.client.force_login(staffuser)
 
         self.correct_form.send_email("testusername")
         self.assertRaises(ValueError)
+
+    def test_send_email_sends_email_to_staffuser(self):
+        """
+        Send email function should send email to staffuser
+        if there are any with emails
+        """
+        staffuser = self.create_staffuser()
+        self.correct_form.send_email(username=staffuser.username)
+        self.assertEqual(len(mail.outbox), 1)
+
+    def test_send_email_sends_emails_to_multiple_staffusers(self):
+        """
+        Send email function should send email to multiple staffusers
+        if there are any with emails
+        """
+        staffuser = self.create_staffuser()
+        staffuser_other = self.create_staffuser(
+            username="test_staffuser_1",
+            email="other@example.com"
+        )
+
+        self.correct_form.send_email(username="test")
+
+        recipients = mail.outbox[0].recipients()
+        expected_recipients = [staffuser.email, staffuser_other.email]
+        self.assertListEqual(recipients, expected_recipients)
+
+    def test_send_email_throws_exception_if_smtp_fails(self):
+        """
+        Checks if SMTPException is handled
+        """
+        #doesn't seem like i can raise SMTPException without
+        #third party tools
+        #https://stackoverflow.com/a/13500768
