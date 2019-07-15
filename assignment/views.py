@@ -1,6 +1,7 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -17,7 +18,7 @@ class ContactView(LoginRequiredMixin, SuccessMessageMixin, FormView):
     form_class = ContactForm
     #override default template name
     template_name = "assignment/contact.html"
-    
+
     #override default login page location, triggers if unauthorised user
     #tried to access this page (LoginRequiredMixin)
     login_url = '/assignment/login/'
@@ -44,14 +45,11 @@ class SignupView(FormView):
     #if form is valid
     def form_valid(self, form):
         form.save()
-        #get data from form
         username = form.cleaned_data.get('username')
-        raw_password = form.cleaned_data.get('password')
-        #create new user
-        #TODO: exception on authenticate from auth tutorial
-        user = authenticate(username=username, raw_password=raw_password)
+        #get created user
+        user_test = User.objects.get(username=username)
         #log in new user in his new account
-        login(self.request, user)
+        login(self.request, user_test)
         #redirect to contact page, because there is nothing to do in this app
         return redirect(reverse('assignment:contact'))
 
@@ -59,12 +57,6 @@ class LoginView(FormView):
     """
     Log in existing users
     """
-<<<<<<< HEAD
-    
-=======
->>>>>>> ac6d4017b909c2d7af099c87dbf014326b0b6616
-    #TODO: if not logged in user was redirected here from
-    # contact view, show message like "you must be logged in to send messages"
 
     form_class = AuthenticationForm
     template_name = 'assignment/login.html'
