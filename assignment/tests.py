@@ -47,15 +47,36 @@ class SignupViewTests(TestCase):
     Tests for signup view.
     """
 
-    def test_signup_view_is_valid_on_correct_request(self):
+    @classmethod
+    def setUpClass(cls):
         """
-        Signup view should create new user on correct request
+        Overriden setUpClass. Performs action on class-wide initialization
+        This one creates ContactForm form
         """
-        client = Client()
-        user_data = {'username': 'test_user', 'password': "testpass1"}
-        url = reverse('assignment:signup')
-        response = client.post(url, user_data)
-        self.assertEqual(response.status_code, 200)
+        super().setUpClass()
+        cls.correct_data = {
+            'username':'test_user',
+            'password1':'test_pass',
+            'password2':'test_pass'
+        }
+        cls.client = Client()
+        cls.url = reverse("assignment:signup")
+
+    def test_signup_view_creates_user_on_correct_request(self):
+        """
+        Check if signup view can create new user
+        """
+        self.client.post(self.url, self.correct_data)
+        usercount = User.objects.all().count()
+        self.assertEqual(usercount, 1)
+
+    def test_signup_view_loggs_user_in_after_creation(self):
+        """
+        Check if signup view loggs new user in after creation
+        """
+        self.client.post(self.url, self.correct_data)
+        created_user = User.objects.all()[0]
+        self.assertTrue(created_user.is_authenticated)
 
 class LoginViewTests(TestCase):
     """
