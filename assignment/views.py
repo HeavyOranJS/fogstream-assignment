@@ -59,7 +59,10 @@ class LoginView(FormView):
     """
     Log in existing users
     """
+<<<<<<< HEAD
     
+=======
+>>>>>>> ac6d4017b909c2d7af099c87dbf014326b0b6616
     #TODO: if not logged in user was redirected here from
     # contact view, show message like "you must be logged in to send messages"
 
