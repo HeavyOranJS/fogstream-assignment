@@ -25,8 +25,6 @@ class MessageLog(models.Model):
     #bind manager
     objects = MessageLogManager()
 
-
-
     def __str__(self):
         return "sender: {}, time: {}, status:{}".format(
             self.sender,
