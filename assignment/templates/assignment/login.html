@@ -1,4 +1,9 @@
 <h2>Log in</h2>
+{% if messages %}
+  {% for message in messages %}
+    <h3> {{message}} </h3>
+  {% endfor %}
+{% endif %}
 <form method="post">
   <!-- Сross Site Request Forgery token -->
   {% csrf_token %}

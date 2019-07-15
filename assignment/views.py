@@ -1,32 +1,37 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.views import generic
+from django.views.generic.edit import FormView
 
 from .forms import ContactForm
 
-class ContactView(LoginRequiredMixin, generic.edit.FormView):
+
+class ContactView(LoginRequiredMixin, SuccessMessageMixin, FormView):
     """
     Send a message to admin. Requires login
     """
-
+    #use custom imported form
     form_class = ContactForm
-
     #override default template name
     template_name = "assignment/contact.html"
+    
     #override default login page location, triggers if unauthorised user
     #tried to access this page (LoginRequiredMixin)
     login_url = '/assignment/login/'
-    #TODO: send message to success_url
     success_url = '/assignment/login/'
+    success_message = "Email sent successfully"
+
     def form_valid(self, form):
-        #send email from form
-        form.send_email(self.request.user.username)
+        #send email from form, get message if it was successful
+        email_sent_successfully = form.send_email(self.request.user.username)
+        if not email_sent_successfully:
+            self.success_message = "Email was not sent, please try again later"
         return super().form_valid(form)
 
-class SignupView(generic.edit.FormView):
+class SignupView(FormView):
     """
     Sign up new users
     """
@@ -50,7 +55,7 @@ class SignupView(generic.edit.FormView):
         #redirect to contact page, because there is nothing to do in this app
         return redirect(reverse('assignment:contact'))
 
-class LoginView(generic.edit.FormView):
+class LoginView(FormView):
     """
     Log in existing users
     """
