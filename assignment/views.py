@@ -14,13 +14,9 @@ class ContactView(LoginRequiredMixin, SuccessMessageMixin, FormView):
     """
     Send a message to admin. Requires login
     """
-    #use custom imported form
     form_class = ContactForm
-    #override default template name
     template_name = "assignment/contact.html"
 
-    #override default login page location, triggers if unauthorised user
-    #tried to access this page (LoginRequiredMixin)
     login_url = '/assignment/login/'
     success_url = '/assignment/login/'
     success_message = "Email sent successfully"
@@ -37,18 +33,15 @@ class SignupView(FormView):
     Sign up new users
     """
 
-    #use template form for user creation
     form_class = UserCreationForm
-    #override default template name
     template_name = "assignment/signup.html"
 
-    #if form is valid
     def form_valid(self, form):
         form.save()
         username = form.cleaned_data.get('username')
-        #get created user
+        #i know tutorials tell get user with authenticate, 
+        # but i couldnt get it to work for some reason
         user_test = User.objects.get(username=username)
-        #log in new user in his new account
         login(self.request, user_test)
         #redirect to contact page, because there is nothing to do in this app
         return redirect(reverse('assignment:contact'))
@@ -62,7 +55,6 @@ class LoginView(FormView):
     template_name = 'assignment/login.html'
     success_url = 'assignment/contact.html'
 
-    #if form is valid
     def form_valid(self, form):
         #no exception because form handles it
         #login user data from form
