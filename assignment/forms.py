@@ -1,5 +1,7 @@
+import json
 import logging
 from smtplib import SMTPException
+from urllib import request
 
 from django import forms
 from django.conf import settings
@@ -16,6 +18,9 @@ class ContactForm(forms.Form):
     """
     email = forms.EmailField()
     message = forms.CharField(widget=forms.Textarea)
+
+    #url for searchin user by email
+    URL = "http://jsonplaceholder.typicode.com/users"
 
     logger = logging.getLogger(__name__)
 
@@ -38,9 +43,14 @@ class ContactForm(forms.Form):
             if not staff_members_emails:
                 raise ValueError("No superusers in system or they dont have emails")
 
+            final_message = ("Message:'{}' \n".format(message) \
+                + "Entered email: {} \n".format(email) \
+                + self.get_email_info(self.URL, email)
+            )
+
             send_mail(
                 subject="Message from user {}".format(username),
-                message="Message:'{0}' \nEntered email: {1}".format(message, email),
+                message=final_message,
                 from_email=settings.EMAIL_HOST_USER,
                 recipient_list=staff_members_emails
             )
@@ -54,3 +64,29 @@ class ContactForm(forms.Form):
         finally:
             MessageLog.objects.create_messagelog(username, timezone.now(), successfully_sent)
         return successfully_sent
+
+    def pritify_json(self, record, indent = ""):
+        """
+        Returns pretty parsed text from json-like dictionary
+        """
+        parsed_record = ""
+        for key, value in record.items():
+            if type(value) == dict:
+                parsed_record += indent + "{}:\n".format(key)
+                parsed_record += self.pritify_json(value, "    ")
+                continue
+            parsed_record += indent + "{}: {}\n".format(key, value)
+        return parsed_record
+
+    def get_email_info(self, url, email):
+        """
+        Make request to url, fetch JSON data, get record with
+        specified email and return pretty text of this record
+        """
+        response = request.urlopen(url)
+        data = response.read()
+        encoding = response.info().get_content_charset('utf-8')
+        parsed_data = json.loads(data.decode(encoding))
+        #find first entry of user with email
+        record_with_email = next(record for record in parsed_data if record['email']==email)
+        return self.pritify_json(record_with_email)
