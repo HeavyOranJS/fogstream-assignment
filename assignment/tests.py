@@ -20,7 +20,6 @@ class ContactViewTests(TestCase):
         and gets page url in cls.url
         """
         super().setUpClass()
-        # creating instance of a client
         cls.client = Client()
         cls.url = reverse('assignment:contact')
 
@@ -115,7 +114,6 @@ class LoginViewTests(TestCase):
         user_data = {'username': 'test_user', 'password': 'testpass1'}
         User.objects.create_user(**user_data)
         url = reverse('assignment:login')
-        #send post request
         client.post(url, user_data)
         logged_user = User.objects.get(username='test_user')
         self.assertTrue(logged_user.is_authenticated)

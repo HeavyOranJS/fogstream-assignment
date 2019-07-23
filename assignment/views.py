@@ -16,13 +16,9 @@ class ContactView(LoginRequiredMixin, SuccessMessageMixin, FormView):
     """
     Send a message to admin. Requires login
     """
-    #use custom imported form
     form_class = ContactForm
-    #override default template name
     template_name = "assignment/contact.html"
 
-    #override default login page location, triggers if unauthorised user
-    #tried to access this page (LoginRequiredMixin)
     login_url = '/assignment/login/'
     success_url = '/assignment/login/'
     success_message = "Email sent successfully"
@@ -39,12 +35,9 @@ class SignupView(FormView):
     Sign up new users
     """
 
-    #use template form for user creation
     form_class = UserCreationForm
-    #override default template name
     template_name = "assignment/signup.html"
 
-    #if form is valid
     def form_valid(self, form):
         form.save()
         username = form.cleaned_data.get('username')
@@ -70,7 +63,6 @@ class LoginView(FormView):
     template_name = 'assignment/login.html'
     success_url = 'assignment/contact.html'
 
-    #if form is valid
     def form_valid(self, form):
         #no exception because form handles it
         #login user data from form

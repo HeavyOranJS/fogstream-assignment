@@ -16,7 +16,7 @@ class MessageLog(models.Model):
     Stores data about sent emails: username of sender, time and boolean
     status (True = success, False = failure)
     """
-    #username
+    #assumes username
     sender = models.CharField(max_length=200)
     time = models.DateTimeField("Date the message was sent")
     #was email sent successfully
