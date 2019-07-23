@@ -77,6 +77,30 @@ class SignupViewTests(TestCase):
         self.client.post(self.url, self.correct_data)
         created_user = User.objects.all()[0]
         self.assertTrue(created_user.is_authenticated)
+    
+    def test_signup_view_throws_ex_on_empty_username(self):
+        """
+        Signup view throws exception if username is empty
+        """
+        client = Client()
+        user_data = {'username': '', 'password': 'testpass1'}
+        url = reverse('assignment:signup')
+        #send post request
+        response = client.post(url, user_data)
+        self.assertRaises(User.DoesNotExist)
+        self.assertEqual(response.status_code, 200)
+
+    def test_signup_view_redirects_on_empty_username(self):
+        """
+        Signup view redirects successfully if username is empty
+        """
+        client = Client()
+        user_data = {'username': '', 'password': 'testpass1'}
+        url = reverse('assignment:signup')
+        #send post request
+        response = client.post(url, user_data)
+        self.assertEqual(response.status_code, 200)
+
 
 class LoginViewTests(TestCase):
     """
@@ -85,8 +109,7 @@ class LoginViewTests(TestCase):
 
     def test_signup_view_creates_user_with_on_correct_request(self):
         """
-        Signup view should change user status to active if
-        correct request was recieved
+        Login view logs users in with correct data
         """
         client = Client()
         user_data = {'username': 'test_user', 'password': 'testpass1'}

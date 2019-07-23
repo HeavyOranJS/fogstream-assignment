@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -47,7 +49,13 @@ class SignupView(FormView):
         form.save()
         username = form.cleaned_data.get('username')
         #get created user
-        user_test = User.objects.get(username=username)
+        try:
+            user_test = User.objects.get(username=username)
+        except User.DoesNotExist as ex:
+            logger = logging.getLogger(__name__)
+            logger.error('Freshly created user was not found in database, \
+            + might be empty username. Full exception text: %s', ex)
+            return redirect(reverse('assignment:signup'))
         #log in new user in his new account
         login(self.request, user_test)
         #redirect to contact page, because there is nothing to do in this app
