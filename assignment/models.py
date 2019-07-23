@@ -18,9 +18,10 @@ class MessageLog(models.Model):
     """
     #username
     sender = models.CharField(max_length=200)
-    time = models.DateTimeField('date of sending')
+    time = models.DateTimeField("Date the message was sent")
     #was email sent successfully
-    status = models.BooleanField('Sent successfully')
+    status = models.BooleanField("Sent successfully")
+
     #bind manager
     objects = MessageLogManager()
 

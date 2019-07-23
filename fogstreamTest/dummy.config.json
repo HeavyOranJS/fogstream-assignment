@@ -6,5 +6,6 @@
     "DB_KEY": "DATABASES PASSWORD",
     "EMAIL_HOST_USER": "EMAIL_HOST_USER@gmail.com",
     "EMAIL_HOST_PASSWORD": "EMAIL_HOST_PASSWORD",
-    "EMAIL_ADMIN":"ADMINS Admin email"
+    "EMAIL_ADMIN":"ADMINS Admin email",
+    "ALLOWED_HOSTS":["ALLOWED_HOSTS goes here", "in array", "if you need to"]
 }
