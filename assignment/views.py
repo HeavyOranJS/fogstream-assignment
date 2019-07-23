@@ -43,6 +43,11 @@ class SignupView(FormView):
         username = form.cleaned_data.get('username')
         #get created user
         try:
+<<<<<<< HEAD
+=======
+            #i know tutorials tell get user with authenticate,
+            # but i couldnt get it to work for some reason
+>>>>>>> 6199f6d... Exceptions on get_email_info; covered with tests
             user_test = User.objects.get(username=username)
         except User.DoesNotExist as ex:
             logger = logging.getLogger(__name__)

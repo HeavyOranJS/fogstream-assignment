@@ -1,3 +1,4 @@
+import requests
 from django.contrib.auth.models import User
 from django.core import mail
 from django.shortcuts import reverse
@@ -76,7 +77,7 @@ class SignupViewTests(TestCase):
         self.client.post(self.url, self.correct_data)
         created_user = User.objects.all()[0]
         self.assertTrue(created_user.is_authenticated)
-    
+
     def test_signup_view_throws_ex_on_empty_username(self):
         """
         Signup view throws exception if username is empty
@@ -198,6 +199,15 @@ class ContactFormTests(TestCase):
         recipients = mail.outbox[0].recipients()
         expected_recipients = [staffuser.email, staffuser_other.email]
         self.assertListEqual(recipients, expected_recipients)
+
+    def test_get_email_info_throws_ex_with_wrong_url(self):
+        """
+        Checks if get_email_info handles wrong passed url
+        """
+        wrong_url = "no_such_url"
+        self.correct_form.get_email_info(url=wrong_url, email="other@example.com")
+        self.assertRaises(requests.exceptions.RequestException)
+
 
     def test_send_email_throws_exception_if_smtp_fails(self):
         """

@@ -1,7 +1,5 @@
-import json
 import logging
 from smtplib import SMTPException
-from urllib import request
 
 import requests
 from django import forms
@@ -69,6 +67,8 @@ class ContactForm(forms.Form):
         """
         Returns pretty parsed text from json-like dictionary
         """
+        if record is None:
+            return "No info about this email"
         parsed_record = ""
         for key, value in record.items():
             if isinstance(value, dict):
@@ -83,8 +83,14 @@ class ContactForm(forms.Form):
         Make request to url, fetch JSON data, get record with
         specified email and return pretty text of this record
         """
-        parsed_data = requests.get(url).json()
+        try:
+            parsed_data = requests.get(url).json()
+        except requests.exceptions.RequestException as ex:
+            self.logger.error('get_email_info error caused by %s', ex)
+            return
 
         #find first entry of user with email
-        record_with_email = next(record for record in parsed_data if record['email'] == email)
-        return self.pritify_json(record_with_email)
+        #didnt fit in one line anymore
+        generator_email_entries = (record for record in parsed_data if record['email'] == email)
+        record_with_email = next(generator_email_entries, None)
+        return self.pritify_json(record=record_with_email)
