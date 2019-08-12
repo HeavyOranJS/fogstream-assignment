@@ -88,9 +88,13 @@ WSGI_APPLICATION = 'fogstreamTest.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME':  get_config('DB_NAME'),
-        'USER': get_config('DB_USER'),
-        'PASSWORD': get_config('DB_KEY'),
+        'NAME':  'postgres',
+        'USER': 'postgres',
+        # 'PASSWORD': '',
+        # 'NAME':  get_config('DB_NAME'),
+        # 'USER': get_config('DB_USER'),
+        # 'PASSWORD': get_config('DB_KEY'),
+        'HOST':'db',
         'PORT': 5432,
     }
 }

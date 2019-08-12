@@ -3,13 +3,24 @@ version: '3'
 services:
   db:
     image: postgres
-    environment:
-      POSTGRES_USER_FILE: /run/secrets/postgres_pass
-      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_pass
-      POSTGRES_DB_FILE: /run/secrets/postgres_db
+    # environment:
+    #   POSTGRES_USER_FILE: /run/secrets/postgres_pass
+    #   POSTGRES_PASSWORD_FILE: /run/secrets/postgres_pass
+    #   POSTGRES_DB_FILE: /run/secrets/postgres_db
+    # env_file: 
+    #   - ./config.env
+    # environment:
+      # - POSTGRES_USER=fog
+      # - POSTGRES_PASSWORD=pass
+      # - POSTGRES_DB=fog_db
   web:
     build: .
-    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+        # command:  npm start'
+    #wait for postgress to start and roll migrations
+    command: python manage.py runserver 0.0.0.0:8000
+    # command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    # command: bash -c "while !</dev/tcp/db/5432; do sleep 1; done; python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    # command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     container_name: forstream_test
     volumes:
       - .:/code
