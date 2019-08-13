@@ -201,6 +201,7 @@ dmypy.json
 
 #ignore secret data
 /fogstreamTest/config.json
+.env
 
 #ignore coverage.py XML and logs
 /fogstreamTest/.coverage
