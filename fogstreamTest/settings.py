@@ -86,14 +86,13 @@ WSGI_APPLICATION = 'fogstreamTest.wsgi.application'
 #NAME and USER taken out to config.json because there is no reason
 #for you to create table and user with my DB_NAME and DB_USER
 DATABASES = {
-    'default':
-    {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME':  get_config('DB_NAME'),
         'USER': get_config('DB_USER'),
         'PASSWORD': get_config('DB_KEY'),
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'HOST':'db',
+        'PORT': 5432,
     }
 }
 
